@@ -7,29 +7,32 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f3ee;
+  --bg: #f7f8fb;
   --surface: #fff;
-  --border: #d6d1c7;
-  --border-dark: #a09890;
-  --text: #1a1714;
-  --text-muted: #6b6560;
-  --accent: #2a4a8a;
-  --accent-light: #e8edf7;
+  --surface-soft: #eef3f4;
+  --border: #d8dee7;
+  --border-dark: #8994a3;
+  --text: #171a1f;
+  --text-muted: #626c78;
+  --accent: #216d73;
+  --accent-strong: #164f54;
+  --accent-light: #e7f3f4;
   --correct: #1a6b3a;
   --correct-bg: #e6f4ec;
   --warn: #7a4a00;
-  --warn-bg: #fdf3e0;
+  --warn-bg: #fff7e6;
   --code-bg: #1e1e2e;
   --code-text: #cdd6f4;
   --radius: 6px;
-  --card-h: 36px;
+  --card-h: 40px;
+  --shadow: 0 10px 28px rgba(23,26,31,.07);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; min-height: 100vh; }
 
 /* ── Header ── */
-.site-header { background: var(--text); color: #fff; padding: 2rem 2rem 1.5rem; position: relative; overflow: hidden; }
-.site-header::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; border-radius:50%; border:1px solid rgba(255,255,255,.08); }
+.site-header { background: #182126; color: #fff; padding: 2rem 2rem 1.5rem; border-bottom: 4px solid var(--accent); }
 .header-label { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em; color:rgba(255,255,255,.5); margin-bottom:.5rem; text-transform:uppercase; }
 .header-title { font-size:1.6rem; font-weight:500; margin-bottom:.3rem; }
 .header-sub { font-size:13px; color:rgba(255,255,255,.5); }
@@ -37,15 +40,15 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 /* ── Name bar ── */
 .name-section { background:var(--surface); border-bottom:1px solid var(--border); padding:1.25rem 2rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
 .name-section label { font-size:14px; font-weight:500; white-space:nowrap; }
-.name-input { flex:1; min-width:180px; max-width:300px; padding:8px 12px; border:1px solid var(--border-dark); border-radius:var(--radius); font-family:inherit; font-size:14px; background:var(--bg); outline:none; transition:border-color .2s; }
+.name-input { flex:1; min-width:180px; max-width:300px; min-height:40px; padding:8px 12px; border:1px solid var(--border-dark); border-radius:var(--radius); font-family:inherit; font-size:14px; background:var(--bg); outline:none; transition:border-color .2s, box-shadow .2s; }
 .name-input:focus { border-color:var(--accent); }
 .name-hint { font-size:12px; color:var(--text-muted); }
 
 /* ── Progress ── */
-.progress-bar-wrap { background:var(--surface); border-bottom:1px solid var(--border); padding:.75rem 2rem; display:flex; align-items:center; gap:12px; }
-.progress-track { flex:1; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.progress-bar-wrap { position:sticky; top:0; z-index:20; background:rgba(255,255,255,.96); border-bottom:1px solid var(--border); padding:.85rem 2rem; display:flex; align-items:center; gap:12px; box-shadow:0 6px 18px rgba(23,26,31,.05); }
+.progress-track { flex:1; height:6px; background:var(--border); border-radius:999px; overflow:hidden; }
 .progress-fill { height:100%; background:var(--accent); border-radius:2px; transition:width .4s ease; width:0%; }
-.progress-label { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-muted); white-space:nowrap; }
+.progress-label { font-size:12px; color:var(--text-muted); white-space:nowrap; }
 
 /* ── Main ── */
 .main { max-width:780px; margin:0 auto; padding:2rem 1.5rem 4rem; }
@@ -56,12 +59,17 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .section-sep-line { flex:1; height:1px; background:var(--border); }
 
 /* ── Q card ── */
-.q-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:1.5rem; overflow:hidden; }
-.q-head { display:flex; align-items:flex-start; gap:12px; padding:1.1rem 1.5rem .9rem; border-bottom:1px solid var(--border); }
+.q-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:1.5rem; overflow:hidden; box-shadow:var(--shadow); transition:border-color .2s, box-shadow .2s; }
+.q-card.complete { border-color:rgba(26,107,58,.45); }
+.q-card.attention { box-shadow:0 0 0 3px rgba(122,74,0,.2), var(--shadow); }
+.q-head { display:flex; align-items:flex-start; gap:12px; padding:1.1rem 1.5rem .9rem; border-bottom:1px solid var(--border); background:linear-gradient(180deg, #fff, #fbfcfd); }
 .q-num { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; background:var(--text); color:#fff; padding:3px 8px; border-radius:3px; white-space:nowrap; margin-top:3px; flex-shrink:0; }
 .q-num.optional { background:var(--accent); }
+.q-card.complete .q-num { background:var(--correct); }
 .q-title { font-size:15px; font-weight:500; }
 .q-subtitle { font-size:12px; color:var(--text-muted); margin-top:2px; }
+.q-status { margin-left:auto; align-self:center; flex-shrink:0; padding:4px 9px; border-radius:999px; background:var(--surface-soft); color:var(--text-muted); font-size:11px; font-weight:500; }
+.q-card.complete .q-status { background:var(--correct-bg); color:var(--correct); }
 .q-body { padding:1.25rem 1.5rem; }
 
 /* ── Scenario box ── */
@@ -90,14 +98,60 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   margin-bottom: 1rem;
   min-height: 56px;
 }
-.card-pool-label {
+.card-pool-header {
   width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.card-pool-title {
   font-size: 11px;
   font-weight: 500;
   color: var(--text-muted);
   letter-spacing: .05em;
   text-transform: uppercase;
+}
+.card-pool-meta {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.card-pool.complete .card-pool-meta {
+  border-color: rgba(26,107,58,.3);
+  background: var(--correct-bg);
+  color: var(--correct);
+}
+.card-pool-guide {
+  width: 100%;
   margin-bottom: 4px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.card-group {
+  width: 100%;
+  display: grid;
+  gap: 7px;
+  padding: .7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,.58);
+}
+.card-group-title {
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 500;
+}
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* Draggable condition card */
@@ -116,10 +170,12 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   white-space: nowrap;
   touch-action: none;
 }
-.cond-card:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(42,74,138,.18); }
+.cond-card:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(33,109,115,.18); }
 .cond-card.dragging { opacity: .4; cursor: grabbing; }
 .cond-card.selected-card { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 0 2px var(--accent); }
+.cond-card.selected-card::before { content: '✓'; margin-right: 6px; color: var(--accent-strong); font-weight: 700; }
 .cond-card.placed { opacity: .45; cursor: default; pointer-events: none; }
+.cond-card.placed::after { content: '사용됨'; margin-left: 8px; color: var(--text-muted); font-size: 11px; font-weight: 400; }
 
 /* Logic builder row */
 .logic-builder {
@@ -131,6 +187,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   font-size: 13px;
   line-height: 1;
 }
+.path-builder .drop-slot { min-width: 92px; }
+.direction-card { min-width: 72px; justify-content: center; }
 .logic-line {
   display: flex;
   align-items: center;
@@ -164,7 +222,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   position: relative;
   white-space: nowrap;
 }
-.drop-slot::after { content: '여기에 놓기'; font-size: 12px; }
+.drop-slot::after { content: attr(data-placeholder); font-size: 12px; }
 .drop-slot.drag-over { border-color: var(--accent); background: var(--accent-light); }
 .drop-slot.filled { border-style: solid; border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 500; cursor: pointer; }
 .drop-slot.filled::after { content: ''; }
@@ -178,27 +236,32 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   font-size: 12px;
   color: var(--text-muted);
   margin-bottom: .6rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
 }
 .tap-hint-icon { font-size: 14px; }
 
 /* ── True/False table ── */
-.tf-grid { display:grid; grid-template-columns:1fr; gap:6px; }
-.tf-row { display:grid; grid-template-columns:28px 1fr 90px; align-items:center; gap:8px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--border); }
+.tf-grid { display:grid; grid-template-columns:1fr; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.tf-row { display:grid; grid-template-columns:28px minmax(0,1fr) 96px; align-items:center; gap:8px; font-size:13px; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--surface); }
 .tf-row:last-child { border-bottom:none; }
-.tf-row-header { font-size:11px; font-weight:500; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; padding-bottom:4px; }
-.tf-select { padding:5px 8px; border:1px solid var(--border-dark); border-radius:var(--radius); font-family:inherit; font-size:13px; background:var(--bg); cursor:pointer; width:100%; outline:none; }
+.tf-row > span { min-width:0; }
+.tf-row-header { font-size:11px; font-weight:500; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; background:var(--surface-soft); }
+.tf-select { min-height:36px; padding:5px 8px; border:1px solid var(--border-dark); border-radius:var(--radius); font-family:inherit; font-size:13px; background:var(--bg); cursor:pointer; width:100%; outline:none; }
 
 /* ── Other input types ── */
-.text-input, .textarea-input { width:100%; padding:9px 12px; border:1px solid var(--border-dark); border-radius:var(--radius); font-family:inherit; font-size:14px; background:var(--bg); color:var(--text); outline:none; transition:border-color .2s; resize:vertical; }
-.text-input:focus, .textarea-input:focus { border-color:var(--accent); }
+.text-input, .textarea-input { width:100%; min-height:40px; padding:9px 12px; border:1px solid var(--border-dark); border-radius:var(--radius); font-family:inherit; font-size:14px; background:var(--bg); color:var(--text); outline:none; transition:border-color .2s, box-shadow .2s; resize:vertical; }
+.text-input:focus, .textarea-input:focus, .tf-select:focus, .name-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(33,109,115,.16); }
 .textarea-input { min-height:80px; line-height:1.6; }
 
 /* ── Radio options ── */
 .options { display:flex; flex-direction:column; gap:8px; }
-.option-label { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); cursor:pointer; font-size:14px; transition:background .15s, border-color .15s; line-height:1.5; }
+.option-label { display:flex; align-items:flex-start; gap:10px; min-height:44px; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); cursor:pointer; font-size:14px; transition:background .15s, border-color .15s; line-height:1.5; }
 .option-label:hover { background:var(--accent-light); border-color:var(--accent); }
 .option-label input { margin-top:2px; flex-shrink:0; accent-color:var(--accent); }
 .option-label.selected { background:var(--accent-light); border-color:var(--accent); }
@@ -207,21 +270,23 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .code-block { background:var(--code-bg); color:var(--code-text); font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1.7; padding:1rem 1.25rem; border-radius:var(--radius); margin-bottom:1.25rem; white-space:pre; overflow-x:auto; }
 
 /* ── Submit ── */
-.submit-section { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:2rem; text-align:center; }
+.submit-section { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:2rem; text-align:center; }
 .submit-btn { background:var(--text); color:#fff; border:none; padding:14px 48px; font-family:inherit; font-size:15px; font-weight:500; border-radius:var(--radius); cursor:pointer; letter-spacing:.02em; transition:background .2s, transform .1s; }
 .submit-btn:hover { background:var(--accent); }
 .submit-btn:active { transform:scale(.98); }
 .submit-btn:disabled { background:var(--border-dark); cursor:not-allowed; }
 .submit-note { font-size:12px; color:var(--text-muted); margin-top:.75rem; }
+.submit-note.ready { color:var(--correct); }
+.submit-note.warning { color:var(--warn); }
 
 /* ── Result overlay ── */
 .result-overlay { display:none; position:fixed; inset:0; background:rgba(26,23,20,.85); z-index:100; align-items:center; justify-content:center; padding:1.5rem; }
 .result-overlay.show { display:flex; }
-.result-card { background:var(--surface); border-radius:12px; padding:2.5rem 2rem; max-width:440px; width:100%; text-align:center; }
+.result-card { background:var(--surface); border-radius:8px; padding:2.5rem 2rem; max-width:440px; width:100%; text-align:center; }
 .result-icon { font-size:2.5rem; margin-bottom:1rem; }
 .result-title { font-size:1.3rem; font-weight:500; margin-bottom:.5rem; }
 .result-score { font-family:'IBM Plex Mono',monospace; font-size:2rem; font-weight:500; color:var(--accent); margin:1rem 0; }
-.result-body { font-size:14px; color:var(--text-muted); line-height:1.7; }
+.result-body { font-size:14px; color:var(--text-muted); line-height:1.7; white-space:pre-line; }
 .result-close { margin-top:1.5rem; background:var(--text); color:#fff; border:none; padding:10px 32px; border-radius:var(--radius); font-family:inherit; font-size:14px; cursor:pointer; }
 
 /* ── Toast ── */
@@ -231,12 +296,23 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 @media (max-width:600px) {
   .site-header { padding:1.5rem 1.25rem 1.25rem; }
   .name-section { padding:1.25rem; }
+  .progress-bar-wrap { padding:.75rem 1.25rem; align-items:flex-start; flex-direction:column; gap:8px; }
+  .progress-track { width:100%; }
   .main { padding:1.5rem 1rem 3rem; }
   .q-head, .q-body { padding:1rem 1.1rem; }
+  .q-head { flex-wrap:wrap; }
+  .q-status { margin-left:0; }
   .logic-line { gap:6px; }
   .drop-slot { min-width:110px; font-size:12px; }
   .cond-card { font-size:12px; padding:5px 10px; }
-  .tf-row { grid-template-columns:22px 1fr 80px; }
+  .tf-row { grid-template-columns:22px minmax(0,1fr) 88px; }
+}
+
+@media (max-width:430px) {
+  .tf-row:not(.tf-row-header) { grid-template-columns:24px minmax(0,1fr); }
+  .tf-row:not(.tf-row-header) .tf-select { grid-column:2; max-width:150px; }
+  .logic-builder { overflow-x:auto; }
+  .submit-btn { width:100%; padding-left:16px; padding-right:16px; }
 }
 </style>
 </head>
@@ -256,7 +332,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 
 <div class="progress-bar-wrap">
   <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-  <div class="progress-label" id="progress-label">0 / 11 완료</div>
+  <div class="progress-label" id="progress-label">필수 0 / 10 완료</div>
 </div>
 
 <main class="main">
@@ -286,11 +362,23 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
       <div class="sub-q-label">1-1. 로직을 완성하시오 — 카드를 빈칸에 드래그하거나 탭하여 배치하세요</div>
       <div class="tap-hint"><span class="tap-hint-icon">💡</span> PC: 카드를 빈칸으로 드래그 · 모바일: 카드 탭 후 빈칸 탭</div>
 
-      <div class="card-pool" id="pool-q1">
-        <div class="card-pool-label">조건 카드</div>
-        <div class="cond-card" data-pool="pool-q1" data-value="돈을 넣었다" draggable="true">돈을 넣었다</div>
-        <div class="cond-card" data-pool="pool-q1" data-value="버튼을 눌렀다" draggable="true">버튼을 눌렀다</div>
-        <div class="cond-card" data-pool="pool-q1" data-value="무료 쿠폰이 있다" draggable="true">무료 쿠폰이 있다</div>
+      <div class="card-pool" id="pool-q1" data-required="3">
+        <div class="card-pool-header">
+          <div class="card-pool-title">조건 카드</div>
+          <div class="card-pool-meta" id="pool-q1-count">0 / 3 배치</div>
+        </div>
+        <div class="card-pool-guide">후보 6개 중 로직에 필요한 카드 3개만 골라 빈칸에 배치하세요.</div>
+        <div class="card-group">
+          <div class="card-group-title">후보 카드</div>
+          <div class="card-list">
+            <div class="cond-card" data-pool="pool-q1" data-value="돈을 넣었다" draggable="true">돈을 넣었다</div>
+            <div class="cond-card" data-pool="pool-q1" data-value="돈을 안넣었다" draggable="true">돈을 안넣었다</div>
+            <div class="cond-card" data-pool="pool-q1" data-value="버튼을 눌렀다" draggable="true">버튼을 눌렀다</div>
+            <div class="cond-card" data-pool="pool-q1" data-value="버튼을 안눌렀다" draggable="true">버튼을 안눌렀다</div>
+            <div class="cond-card" data-pool="pool-q1" data-value="무료 쿠폰이 있다" draggable="true">무료 쿠폰이 있다</div>
+            <div class="cond-card" data-pool="pool-q1" data-value="무료 쿠폰이 없다" draggable="true">무료 쿠폰이 없다</div>
+          </div>
+        </div>
       </div>
 
       <div class="logic-builder">
@@ -346,12 +434,23 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
       <div class="sub-q-label">2-1. 로직을 완성하시오</div>
       <div class="tap-hint"><span class="tap-hint-icon">💡</span> PC: 카드를 빈칸으로 드래그 · 모바일: 카드 탭 후 빈칸 탭</div>
 
-      <div class="card-pool" id="pool-q2">
-        <div class="card-pool-label">조건 카드</div>
-        <div class="cond-card" data-pool="pool-q2" data-value="사람이 있다" draggable="true">사람이 있다</div>
-        <div class="cond-card" data-pool="pool-q2" data-value="NOT 사람이 있다" draggable="true">NOT 사람이 있다</div>
-        <div class="cond-card" data-pool="pool-q2" data-value="10분이 지났다" draggable="true">10분이 지났다</div>
-        <div class="cond-card" data-pool="pool-q2" data-value="비상 버튼이 눌렸다" draggable="true">비상 버튼이 눌렸다</div>
+      <div class="card-pool" id="pool-q2" data-required="3">
+        <div class="card-pool-header">
+          <div class="card-pool-title">조건 카드</div>
+          <div class="card-pool-meta" id="pool-q2-count">0 / 3 배치</div>
+        </div>
+        <div class="card-pool-guide">후보 6개 중 로직에 필요한 카드 3개만 골라 빈칸에 배치하세요.</div>
+        <div class="card-group">
+          <div class="card-group-title">후보 카드</div>
+          <div class="card-list">
+            <div class="cond-card" data-pool="pool-q2" data-value="사람이 있다" draggable="true">사람이 있다</div>
+            <div class="cond-card" data-pool="pool-q2" data-value="사람이 없다" draggable="true">사람이 없다</div>
+            <div class="cond-card" data-pool="pool-q2" data-value="10분이 지났다" draggable="true">10분이 지났다</div>
+            <div class="cond-card" data-pool="pool-q2" data-value="10분이 안지났다" draggable="true">10분이 안지났다</div>
+            <div class="cond-card" data-pool="pool-q2" data-value="비상 버튼이 눌렸다" draggable="true">비상 버튼이 눌렸다</div>
+            <div class="cond-card" data-pool="pool-q2" data-value="비상 버튼이 안눌렸다" draggable="true">비상 버튼이 안눌렸다</div>
+          </div>
+        </div>
       </div>
 
       <div class="logic-builder">
@@ -407,12 +506,23 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
       <div class="sub-q-label">3-1. 로직을 완성하시오</div>
       <div class="tap-hint"><span class="tap-hint-icon">💡</span> PC: 카드를 빈칸으로 드래그 · 모바일: 카드 탭 후 빈칸 탭</div>
 
-      <div class="card-pool" id="pool-q3">
-        <div class="card-pool-label">조건 카드</div>
-        <div class="cond-card" data-pool="pool-q3" data-value="교실이 어둡다" draggable="true">교실이 어둡다</div>
-        <div class="cond-card" data-pool="pool-q3" data-value="사람이 있다" draggable="true">사람이 있다</div>
-        <div class="cond-card" data-pool="pool-q3" data-value="청소 모드이다" draggable="true">청소 모드이다</div>
-        <div class="cond-card" data-pool="pool-q3" data-value="사람이 없다" draggable="true">사람이 없다</div>
+      <div class="card-pool" id="pool-q3" data-required="3">
+        <div class="card-pool-header">
+          <div class="card-pool-title">조건 카드</div>
+          <div class="card-pool-meta" id="pool-q3-count">0 / 3 배치</div>
+        </div>
+        <div class="card-pool-guide">후보 6개 중 자연어 조건과 맞는 카드 3개를 선택하세요.</div>
+        <div class="card-group">
+          <div class="card-group-title">후보 카드</div>
+          <div class="card-list">
+            <div class="cond-card" data-pool="pool-q3" data-value="교실이 어둡다" draggable="true">교실이 어둡다</div>
+            <div class="cond-card" data-pool="pool-q3" data-value="교실이 밝다" draggable="true">교실이 밝다</div>
+            <div class="cond-card" data-pool="pool-q3" data-value="사람이 있다" draggable="true">사람이 있다</div>
+            <div class="cond-card" data-pool="pool-q3" data-value="사람이 없다" draggable="true">사람이 없다</div>
+            <div class="cond-card" data-pool="pool-q3" data-value="청소모드이다" draggable="true">청소모드이다</div>
+            <div class="cond-card" data-pool="pool-q3" data-value="청소모드가 아니다" draggable="true">청소모드가 아니다</div>
+          </div>
+        </div>
       </div>
 
       <div class="logic-builder">
@@ -469,12 +579,23 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
       <div class="sub-q-label">4-1. 로직을 완성하시오</div>
       <div class="tap-hint"><span class="tap-hint-icon">💡</span> PC: 카드를 빈칸으로 드래그 · 모바일: 카드 탭 후 빈칸 탭</div>
 
-      <div class="card-pool" id="pool-q4">
-        <div class="card-pool-label">조건 카드</div>
-        <div class="cond-card" data-pool="pool-q4" data-value="균열이 감지됐다" draggable="true">균열이 감지됐다</div>
-        <div class="cond-card" data-pool="pool-q4" data-value="진동이 기준치를 초과했다" draggable="true">진동이 기준치를 초과했다</div>
-        <div class="cond-card" data-pool="pool-q4" data-value="홍수 경보가 발령됐다" draggable="true">홍수 경보가 발령됐다</div>
-        <div class="cond-card" data-pool="pool-q4" data-value="진동이 정상이다" draggable="true">진동이 정상이다</div>
+      <div class="card-pool" id="pool-q4" data-required="3">
+        <div class="card-pool-header">
+          <div class="card-pool-title">조건 카드</div>
+          <div class="card-pool-meta" id="pool-q4-count">0 / 3 배치</div>
+        </div>
+        <div class="card-pool-guide">후보 6개 중 경보 조건에 필요한 카드 3개를 선택하세요.</div>
+        <div class="card-group">
+          <div class="card-group-title">후보 카드</div>
+          <div class="card-list">
+            <div class="cond-card" data-pool="pool-q4" data-value="균열이 감지 되었다" draggable="true">균열이 감지 되었다</div>
+            <div class="cond-card" data-pool="pool-q4" data-value="균열이 감지 되지 않았다" draggable="true">균열이 감지 되지 않았다</div>
+            <div class="cond-card" data-pool="pool-q4" data-value="진동이 기준치를 초과했다" draggable="true">진동이 기준치를 초과했다</div>
+            <div class="cond-card" data-pool="pool-q4" data-value="진동이 기준치를 미달했다" draggable="true">진동이 기준치를 미달했다</div>
+            <div class="cond-card" data-pool="pool-q4" data-value="홍수 경보가 발령됐다" draggable="true">홍수 경보가 발령됐다</div>
+            <div class="cond-card" data-pool="pool-q4" data-value="홍수 경보가 발령 되지 않았다" draggable="true">홍수 경보가 발령 되지 않았다</div>
+          </div>
+        </div>
       </div>
 
       <div class="logic-builder">
@@ -535,12 +656,22 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
       <div class="sub-q-label">5-1. 로직을 완성하시오</div>
       <div class="tap-hint"><span class="tap-hint-icon">💡</span> PC: 카드를 빈칸으로 드래그 · 모바일: 카드 탭 후 빈칸 탭</div>
 
-      <div class="card-pool" id="pool-q5">
-        <div class="card-pool-label">조건 카드</div>
-        <div class="cond-card" data-pool="pool-q5" data-value="A" draggable="true">A</div>
-        <div class="cond-card" data-pool="pool-q5" data-value="B" draggable="true">B</div>
-        <div class="cond-card" data-pool="pool-q5" data-value="C" draggable="true">C</div>
-        <div class="cond-card" data-pool="pool-q5" data-value="A OR B" draggable="true">A OR B</div>
+      <div class="card-pool" id="pool-q5" data-required="5">
+        <div class="card-pool-header">
+          <div class="card-pool-title">조건 카드</div>
+          <div class="card-pool-meta" id="pool-q5-count">0 / 5 배치</div>
+        </div>
+        <div class="card-pool-guide">A, B, C와 AND, OR 카드를 모두 사용해 Boolean 식을 완성하세요.</div>
+        <div class="card-group">
+          <div class="card-group-title">후보 카드</div>
+          <div class="card-list">
+            <div class="cond-card" data-pool="pool-q5" data-value="A" draggable="true">A</div>
+            <div class="cond-card" data-pool="pool-q5" data-value="B" draggable="true">B</div>
+            <div class="cond-card" data-pool="pool-q5" data-value="C" draggable="true">C</div>
+            <div class="cond-card" data-pool="pool-q5" data-value="AND" draggable="true">AND</div>
+            <div class="cond-card" data-pool="pool-q5" data-value="OR" draggable="true">OR</div>
+          </div>
+        </div>
       </div>
 
       <div class="logic-builder">
@@ -548,10 +679,10 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
           <span>조교 후보 =</span>
           <span class="logic-paren">(</span>
           <div class="drop-slot" id="slot-q5_a" data-slot="q5_a"><span class="slot-text"></span><span class="slot-x">✕</span></div>
-          <span class="logic-op">AND</span>
+          <div class="drop-slot" id="slot-q5_op1" data-slot="q5_op1"><span class="slot-text"></span><span class="slot-x">✕</span></div>
           <div class="drop-slot" id="slot-q5_b" data-slot="q5_b"><span class="slot-text"></span><span class="slot-x">✕</span></div>
           <span class="logic-paren">)</span>
-          <span class="logic-op">OR</span>
+          <div class="drop-slot" id="slot-q5_op2" data-slot="q5_op2"><span class="slot-text"></span><span class="slot-x">✕</span></div>
           <span class="logic-paren">(</span>
           <div class="drop-slot" id="slot-q5_c" data-slot="q5_c"><span class="slot-text"></span><span class="slot-x">✕</span></div>
           <span class="logic-paren">)</span>
@@ -663,11 +794,44 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   1   | 1 | 2 | 9
   6   | 1 | 1 | Goal</div>
     <div class="sub-q">
-      <div class="sub-q-label">이동 경로 (예: 아래 → 오른쪽 → …)</div>
-      <input type="text" id="q8_path" class="text-input" placeholder="아래 → 아래 → 오른쪽 → ...">
+      <div class="sub-q-label">8-1. 방향 카드를 순서대로 놓아 최소 비용 경로를 완성하시오</div>
+      <div class="tap-hint"><span class="tap-hint-icon">💡</span> 오른쪽 3번, 아래 3번을 사용해 총 6칸을 채우세요</div>
+
+      <div class="card-pool" id="pool-q8" data-required="6">
+        <div class="card-pool-header">
+          <div class="card-pool-title">방향 카드</div>
+          <div class="card-pool-meta" id="pool-q8-count">0 / 6 배치</div>
+        </div>
+        <div class="card-pool-guide">Start에서 Goal까지 이동하는 방향을 왼쪽부터 차례대로 배치하세요.</div>
+        <div class="card-group">
+          <div class="card-group-title">후보 카드</div>
+          <div class="card-list">
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="오른쪽" draggable="true">오른쪽</div>
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="오른쪽" draggable="true">오른쪽</div>
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="오른쪽" draggable="true">오른쪽</div>
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="아래" draggable="true">아래</div>
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="아래" draggable="true">아래</div>
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="아래" draggable="true">아래</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logic-builder path-builder">
+        <div class="logic-line">
+          <span>Start</span>
+          <div class="drop-slot" id="slot-q8_1" data-slot="q8_1"><span class="slot-text"></span><span class="slot-x">✕</span></div>
+          <div class="drop-slot" id="slot-q8_2" data-slot="q8_2"><span class="slot-text"></span><span class="slot-x">✕</span></div>
+          <div class="drop-slot" id="slot-q8_3" data-slot="q8_3"><span class="slot-text"></span><span class="slot-x">✕</span></div>
+          <div class="drop-slot" id="slot-q8_4" data-slot="q8_4"><span class="slot-text"></span><span class="slot-x">✕</span></div>
+          <div class="drop-slot" id="slot-q8_5" data-slot="q8_5"><span class="slot-text"></span><span class="slot-x">✕</span></div>
+          <div class="drop-slot" id="slot-q8_6" data-slot="q8_6"><span class="slot-text"></span><span class="slot-x">✕</span></div>
+          <span>Goal</span>
+        </div>
+      </div>
+      <input type="hidden" id="q8_path">
     </div>
     <div class="sub-q">
-      <div class="sub-q-label">총 비용</div>
+      <div class="sub-q-label">8-2. 위 경로의 총 비용</div>
       <input type="number" id="q8_cost" class="text-input" style="max-width:120px;" placeholder="숫자만">
     </div>
   </div>
@@ -791,23 +955,23 @@ PRINT best</div>
 
 <script>
 // ── Google Apps Script URL ──
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRnbyG0MQu8GFL-ZAu9zNERhgFJjT1fHl3JOZQAem5nJqbSf6kSQ8vV1z9X8HwkcFh/exec';
 
 // ── 정답 ──
 const ANSWERS = {
   q1_a:'돈을 넣었다', q1_b:'버튼을 눌렀다', q1_c:'무료 쿠폰이 있다',
   q1_r1:'True', q1_r2:'False', q1_r3:'False', q1_r4:'True', q1_r5:'True',
-  q2_a:'NOT 사람이 있다', q2_b:'10분이 지났다', q2_c:'비상 버튼이 눌렸다',
+  q2_a:'사람이 없다', q2_b:'10분이 지났다', q2_c:'비상 버튼이 눌렸다',
   q2_r1:'True', q2_r2:'False', q2_r3:'False', q2_r4:'True', q2_r5:'True', q2_r6:'True',
-  q3_a:'교실이 어둡다', q3_b:'사람이 있다', q3_c:'청소 모드이다',
+  q3_a:'교실이 어둡다', q3_b:'사람이 있다', q3_c:'청소모드이다',
   q3_r1:'True', q3_r2:'False', q3_r3:'False', q3_r4:'True', q3_r5:'True', q3_r6:'True', q3_r7:'False',
-  q4_a:'균열이 감지됐다', q4_b:'진동이 기준치를 초과했다', q4_c:'홍수 경보가 발령됐다',
+  q4_a:'균열이 감지 되었다', q4_b:'진동이 기준치를 초과했다', q4_c:'홍수 경보가 발령됐다',
   q4_r1:'True', q4_r2:'False', q4_r3:'False', q4_r4:'True', q4_r5:'True', q4_r6:'True',
-  q5_a:'A', q5_b:'B', q5_c:'C',
+  q5_a:'A', q5_op1:'AND', q5_b:'B', q5_op2:'OR', q5_c:'C',
   q5_r1:'True', q5_r2:'False', q5_r3:'False', q5_r4:'True', q5_r5:'True', q5_r6:'True',
   q6:'(A AND B) OR C',
   q7_1:'28', q7_2:'82',
-  q8_cost:'7',
+  q8_path:'아래 → 아래 → 오른쪽 → 아래 → 오른쪽 → 오른쪽', q8_cost:'7',
   q9_max:'8', q9_min:'2',
   q10_1:'D', q10_2:'B', q10_3:'A', q10_4:'C',
   qs_1:'91', qs_3:'<'
@@ -818,21 +982,45 @@ const AUTO_GRADE = ['q1_r1','q1_r2','q1_r3','q1_r4','q1_r5',
   'q3_r1','q3_r2','q3_r3','q3_r4','q3_r5','q3_r6','q3_r7',
   'q4_r1','q4_r2','q4_r3','q4_r4','q4_r5','q4_r6',
   'q5_r1','q5_r2','q5_r3','q5_r4','q5_r5','q5_r6',
-  'q6','q7_1','q7_2','q8_cost','q9_max','q9_min',
+  'q6','q7_1','q7_2','q8_path','q8_cost','q9_max','q9_min',
   'q10_1','q10_2','q10_3','q10_4','qs_1','qs_3'];
+
+const REQUIRED_QUESTIONS = [
+  { key:'q1', label:'Q1', slots:['slot-q1_a','slot-q1_b','slot-q1_c'], selects:['q1_r1','q1_r2','q1_r3','q1_r4','q1_r5'] },
+  { key:'q2', label:'Q2', slots:['slot-q2_a','slot-q2_b','slot-q2_c'], selects:['q2_r1','q2_r2','q2_r3','q2_r4','q2_r5','q2_r6'] },
+  { key:'q3', label:'Q3', slots:['slot-q3_a','slot-q3_b','slot-q3_c'], selects:['q3_r1','q3_r2','q3_r3','q3_r4','q3_r5','q3_r6','q3_r7'] },
+  { key:'q4', label:'Q4', slots:['slot-q4_a','slot-q4_b','slot-q4_c'], selects:['q4_r1','q4_r2','q4_r3','q4_r4','q4_r5','q4_r6'] },
+  { key:'q5', label:'Q5', slots:['slot-q5_a','slot-q5_op1','slot-q5_b','slot-q5_op2','slot-q5_c'], selects:['q5_r1','q5_r2','q5_r3','q5_r4','q5_r5','q5_r6'] },
+  { key:'q6', label:'Q6', radio:'q6' },
+  { key:'q7', label:'Q7', text:['q7_1','q7_2'] },
+  { key:'q8', label:'Q8', slots:['slot-q8_1','slot-q8_2','slot-q8_3','slot-q8_4','slot-q8_5','slot-q8_6'], text:['q8_cost'] },
+  { key:'q9', label:'Q9', text:['q9_max','q9_min','q9_logic'] },
+  { key:'q10', label:'Q10', text:['q10_1','q10_2','q10_3','q10_4','q10_logic'] }
+];
+
+const OPTIONAL_QUESTIONS = [
+  { key:'qs', label:'선택', text:['qs_1','qs_2','qs_3'], optional:true }
+];
 
 // ════════════════════════════════
 // DRAG & DROP + TAP SYSTEM
 // ════════════════════════════════
 const slotValues = {};   // slotId → value
+const slotCardIds = {};  // slotId → source card id
 let selectedCard = null; // tap mode: currently selected card
 
 function initDragDrop() {
   // ── Draggable cards ──
-  document.querySelectorAll('.cond-card').forEach(card => {
+  document.querySelectorAll('.cond-card').forEach((card, index) => {
+    if (!card.dataset.cardId) card.dataset.cardId = `card-${index}`;
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `조건 카드: ${card.dataset.value}`);
+
     card.addEventListener('dragstart', e => {
       e.dataTransfer.setData('text/plain', card.dataset.value);
       e.dataTransfer.setData('pool', card.dataset.pool);
+      e.dataTransfer.setData('cardId', card.dataset.cardId);
       card.classList.add('dragging');
     });
     card.addEventListener('dragend', () => card.classList.remove('dragging'));
@@ -848,11 +1036,27 @@ function initDragDrop() {
         selectedCard = card;
         card.classList.add('selected-card');
       }
+      updateCardPoolCounts();
+    });
+
+    card.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      card.click();
     });
   });
 
   // ── Drop slots ──
   document.querySelectorAll('.drop-slot').forEach(slot => {
+    const suffix = slot.dataset.slot ? slot.dataset.slot.split('_')[1] : '';
+    const slotLabels = {
+      a:'첫 번째 조건', b:'두 번째 조건', c:'세 번째 조건',
+      op1:'연산자', op2:'연산자',
+      1:'1번째 이동', 2:'2번째 이동', 3:'3번째 이동',
+      4:'4번째 이동', 5:'5번째 이동', 6:'6번째 이동'
+    };
+    slot.dataset.placeholder = slotLabels[suffix] || '여기에 놓기';
+
     // Drag over
     slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
     slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
@@ -863,16 +1067,18 @@ function initDragDrop() {
       slot.classList.remove('drag-over');
       const value = e.dataTransfer.getData('text/plain');
       const poolId = e.dataTransfer.getData('pool');
-      placeCard(slot, value, poolId);
+      const cardId = e.dataTransfer.getData('cardId');
+      placeCard(slot, value, poolId, cardId);
     });
 
     // Tap on slot
     slot.addEventListener('click', () => {
       if (selectedCard) {
         // Place selected card into this slot
-        placeCard(slot, selectedCard.dataset.value, selectedCard.dataset.pool);
+        placeCard(slot, selectedCard.dataset.value, selectedCard.dataset.pool, selectedCard.dataset.cardId);
         selectedCard.classList.remove('selected-card');
         selectedCard = null;
+        updateCardPoolCounts();
       } else if (slot.classList.contains('filled')) {
         // Remove card from slot
         clearSlot(slot);
@@ -881,16 +1087,25 @@ function initDragDrop() {
   });
 }
 
-function placeCard(slot, value, poolId) {
+function placeCard(slot, value, poolId, cardId) {
+  const slotPrefix = slot.dataset.slot && slot.dataset.slot.match(/^(q\d+|qs)/);
+  if (poolId && slotPrefix && poolId !== `pool-${slotPrefix[1]}`) {
+    showToast('같은 문제의 카드만 이 빈칸에 넣을 수 있습니다.');
+    return;
+  }
+
   // If slot already filled, return old card to pool
   if (slotValues[slot.id]) clearSlot(slot);
 
   slotValues[slot.id] = value;
+  if (cardId) slotCardIds[slot.id] = cardId;
   slot.classList.add('filled');
   slot.querySelector('.slot-text').textContent = value;
 
   // Mark source card as placed
-  const card = document.querySelector(`.cond-card[data-pool="${poolId}"][data-value="${value}"]`);
+  const card = cardId
+    ? document.querySelector(`.cond-card[data-card-id="${cardId}"]`)
+    : document.querySelector(`.cond-card[data-pool="${poolId}"][data-value="${value}"]:not(.placed)`);
   if (card) card.classList.add('placed');
 
   updateProgress();
@@ -898,52 +1113,126 @@ function placeCard(slot, value, poolId) {
 
 function clearSlot(slot) {
   const oldValue = slotValues[slot.id];
-  const poolId = slot.id.replace('slot-', '').replace(/_[abc]$/, q => {
-    // find which pool owns this card
-    return '';
-  });
+  const oldCardId = slotCardIds[slot.id];
 
-  // Re-enable the card in its pool
-  document.querySelectorAll('.cond-card').forEach(card => {
-    if (card.dataset.value === oldValue && slot.id.includes(card.dataset.pool.replace('pool-',''))) {
-      card.classList.remove('placed');
-    }
-  });
-
-  // Fallback: re-enable any card with matching value across all pools
-  // (find pool by slot prefix)
-  const slotKey = slot.dataset.slot; // e.g. "q1_a"
-  const qPrefix = slotKey.match(/^(q\d+|qs)/)[1]; // "q1"
-  document.querySelectorAll(`#pool-${qPrefix} .cond-card[data-value="${oldValue}"]`).forEach(c => c.classList.remove('placed'));
+  if (oldCardId) {
+    const card = document.querySelector(`.cond-card[data-card-id="${oldCardId}"]`);
+    if (card) card.classList.remove('placed');
+  } else {
+    const slotKey = slot.dataset.slot; // e.g. "q1_a"
+    const qPrefix = slotKey.match(/^(q\d+|qs)/)[1]; // "q1"
+    const card = document.querySelector(`#pool-${qPrefix} .cond-card[data-value="${oldValue}"].placed`);
+    if (card) card.classList.remove('placed');
+  }
 
   delete slotValues[slot.id];
+  delete slotCardIds[slot.id];
   slot.classList.remove('filled');
   slot.querySelector('.slot-text').textContent = '';
   updateProgress();
 }
 
 // ── Progress ──
+function hasInputValue(id) {
+  const el = document.getElementById(id);
+  return !!(el && el.value.trim());
+}
+
+function isQuestionComplete(question) {
+  if (question.slots && !question.slots.every(id => !!slotValues[id])) return false;
+  if (question.selects && !question.selects.every(id => hasInputValue(id))) return false;
+  if (question.text && !question.text.every(id => hasInputValue(id))) return false;
+  if (question.radio && !document.querySelector(`input[name=${question.radio}]:checked`)) return false;
+  return true;
+}
+
+function ensureQuestionStatuses() {
+  const cards = document.querySelectorAll('.q-card');
+  [...REQUIRED_QUESTIONS, ...OPTIONAL_QUESTIONS].forEach((question, index) => {
+    if (!question.card) question.card = cards[index];
+    if (!question.card) return;
+
+    const head = question.card.querySelector('.q-head');
+    let status = question.card.querySelector('.q-status');
+    if (!status && head) {
+      status = document.createElement('div');
+      status.className = 'q-status';
+      head.appendChild(status);
+    }
+  });
+}
+
+function getIncompleteRequiredQuestions() {
+  return REQUIRED_QUESTIONS.filter(question => !isQuestionComplete(question));
+}
+
+function updateDerivedAnswers() {
+  const q8Path = ['q8_1','q8_2','q8_3','q8_4','q8_5','q8_6']
+    .map(key => slotValues[`slot-${key}`])
+    .filter(Boolean)
+    .join(' → ');
+  const q8Input = document.getElementById('q8_path');
+  if (q8Input) q8Input.value = q8Path;
+}
+
+function updateCardPoolCounts() {
+  document.querySelectorAll('.card-pool').forEach(pool => {
+    const required = Number(pool.dataset.required || 0);
+    const placed = pool.querySelectorAll('.cond-card.placed').length;
+    const meta = pool.querySelector('.card-pool-meta');
+    const complete = required > 0 && placed >= required;
+
+    pool.classList.toggle('complete', complete);
+    if (meta && required) meta.textContent = `${Math.min(placed, required)} / ${required} 배치`;
+  });
+
+  document.querySelectorAll('.cond-card').forEach(card => {
+    card.setAttribute('aria-pressed', card.classList.contains('selected-card') ? 'true' : 'false');
+    card.setAttribute('aria-disabled', card.classList.contains('placed') ? 'true' : 'false');
+  });
+}
+
 function updateProgress() {
-  const textIds = ['q7_1','q7_2','q8_path','q8_cost','q9_max','q9_min','q9_logic','q10_1','q10_2','q10_3','q10_4','q10_logic'];
-  const selectIds = ['q1_r1','q1_r2','q1_r3','q1_r4','q1_r5',
-    'q2_r1','q2_r2','q2_r3','q2_r4','q2_r5','q2_r6',
-    'q3_r1','q3_r2','q3_r3','q3_r4','q3_r5','q3_r6','q3_r7',
-    'q4_r1','q4_r2','q4_r3','q4_r4','q4_r5','q4_r6',
-    'q5_r1','q5_r2','q5_r3','q5_r4','q5_r5','q5_r6'];
-  const slotIds = ['slot-q1_a','slot-q1_b','slot-q1_c',
-    'slot-q2_a','slot-q2_b','slot-q2_c',
-    'slot-q3_a','slot-q3_b','slot-q3_c',
-    'slot-q4_a','slot-q4_b','slot-q4_c',
-    'slot-q5_a','slot-q5_b','slot-q5_c'];
+  ensureQuestionStatuses();
+  updateCardPoolCounts();
+  updateDerivedAnswers();
 
-  let filled = 0, total = textIds.length + selectIds.length + slotIds.length + 1;
-  textIds.forEach(id => { const el = document.getElementById(id); if (el && el.value.trim()) filled++; });
-  selectIds.forEach(id => { const el = document.getElementById(id); if (el && el.value) filled++; });
-  slotIds.forEach(id => { if (slotValues[id]) filled++; });
-  if (document.querySelector('input[name=q6]:checked')) filled++;
+  let requiredDone = 0;
+  REQUIRED_QUESTIONS.forEach(question => {
+    const complete = isQuestionComplete(question);
+    if (complete) requiredDone++;
+    if (question.card) {
+      question.card.classList.toggle('complete', complete);
+      const status = question.card.querySelector('.q-status');
+      if (status) status.textContent = complete ? '완료' : '미완료';
+    }
+  });
 
-  document.getElementById('progress-fill').style.width = Math.round(filled/total*100)+'%';
-  document.getElementById('progress-label').textContent = filled+' / '+total+' 완료';
+  OPTIONAL_QUESTIONS.forEach(question => {
+    const complete = isQuestionComplete(question);
+    if (question.card) {
+      question.card.classList.toggle('complete', complete);
+      const status = question.card.querySelector('.q-status');
+      if (status) status.textContent = complete ? '작성됨' : '선택';
+    }
+  });
+
+  const total = REQUIRED_QUESTIONS.length;
+  const optionalDone = OPTIONAL_QUESTIONS.some(isQuestionComplete);
+  const missingCount = total - requiredDone;
+  const label = `필수 ${requiredDone} / ${total} 완료${optionalDone ? ' · 선택 작성됨' : ''}`;
+  const note = document.getElementById('submit-note');
+
+  document.getElementById('progress-fill').style.width = Math.round(requiredDone/total*100)+'%';
+  document.getElementById('progress-label').textContent = label;
+
+  if (note) {
+    note.classList.toggle('ready', missingCount === 0);
+    note.classList.toggle('warning', missingCount > 0);
+    note.textContent = missingCount === 0
+      ? '모든 필수 문항이 완료되었습니다. 제출 전에 이름을 확인하세요.'
+      : `필수 ${missingCount}문항이 아직 미완료입니다.`;
+  }
 }
 
 // ── Radio highlight ──
@@ -977,6 +1266,18 @@ async function submitQuiz() {
   const name = document.getElementById('student-name').value.trim();
   if (!name) { showToast('이름을 입력해주세요'); return; }
 
+  const incomplete = getIncompleteRequiredQuestions();
+  if (incomplete.length) {
+    const first = incomplete[0];
+    showToast(`${first.label}부터 확인해주세요. 필수 ${incomplete.length}문항이 미완료입니다.`);
+    if (first.card) {
+      first.card.classList.add('attention');
+      first.card.scrollIntoView({ behavior:'smooth', block:'center' });
+      setTimeout(() => first.card.classList.remove('attention'), 1600);
+    }
+    return;
+  }
+
   const btn = document.getElementById('submit-btn');
   btn.disabled = true; btn.textContent = '제출 중...';
 
@@ -990,7 +1291,7 @@ async function submitQuiz() {
     q3_r1:getVal('q3_r1'), q3_r2:getVal('q3_r2'), q3_r3:getVal('q3_r3'), q3_r4:getVal('q3_r4'), q3_r5:getVal('q3_r5'), q3_r6:getVal('q3_r6'), q3_r7:getVal('q3_r7'),
     q4_a:getSlot('q4_a'), q4_b:getSlot('q4_b'), q4_c:getSlot('q4_c'),
     q4_r1:getVal('q4_r1'), q4_r2:getVal('q4_r2'), q4_r3:getVal('q4_r3'), q4_r4:getVal('q4_r4'), q4_r5:getVal('q4_r5'), q4_r6:getVal('q4_r6'),
-    q5_a:getSlot('q5_a'), q5_b:getSlot('q5_b'), q5_c:getSlot('q5_c'),
+    q5_a:getSlot('q5_a'), q5_op1:getSlot('q5_op1'), q5_b:getSlot('q5_b'), q5_op2:getSlot('q5_op2'), q5_c:getSlot('q5_c'),
     q5_r1:getVal('q5_r1'), q5_r2:getVal('q5_r2'), q5_r3:getVal('q5_r3'), q5_r4:getVal('q5_r4'), q5_r5:getVal('q5_r5'), q5_r6:getVal('q5_r6'),
     q6:getRadio('q6'),
     q7_1:getVal('q7_1'), q7_2:getVal('q7_2'),

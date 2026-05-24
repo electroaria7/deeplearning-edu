@@ -83,8 +83,8 @@ function buildHeaders() {
     'Q4-1번(학생)', 'Q4-2번(학생)', 'Q4-3번(학생)', 'Q4-4번(학생)', 'Q4-5번(학생)', 'Q4-6번(학생)',
     'Q4-1번(정답)', 'Q4-2번(정답)', 'Q4-3번(정답)', 'Q4-4번(정답)', 'Q4-5번(정답)', 'Q4-6번(정답)',
     // Q5
-    'Q5-로직A(학생)', 'Q5-로직B(학생)', 'Q5-로직C(학생)',
-    'Q5-로직A(정답)', 'Q5-로직B(정답)', 'Q5-로직C(정답)',
+    'Q5-로직A(학생)', 'Q5-연산자1(학생)', 'Q5-로직B(학생)', 'Q5-연산자2(학생)', 'Q5-로직C(학생)',
+    'Q5-로직A(정답)', 'Q5-연산자1(정답)', 'Q5-로직B(정답)', 'Q5-연산자2(정답)', 'Q5-로직C(정답)',
     'Q5-1번(학생)', 'Q5-2번(학생)', 'Q5-3번(학생)', 'Q5-4번(학생)', 'Q5-5번(학생)', 'Q5-6번(학생)',
     'Q5-1번(정답)', 'Q5-2번(정답)', 'Q5-3번(정답)', 'Q5-4번(정답)', 'Q5-5번(정답)', 'Q5-6번(정답)',
     // Q6
@@ -92,7 +92,7 @@ function buildHeaders() {
     // Q7
     'Q7-1(학생)', 'Q7-2(학생)', 'Q7-1(정답)', 'Q7-2(정답)',
     // Q8
-    'Q8-경로(학생)', 'Q8-비용(학생)', 'Q8-비용(정답)',
+    'Q8-경로(학생)', 'Q8-경로(정답)', 'Q8-비용(학생)', 'Q8-비용(정답)',
     // Q9
     'Q9-최대값(학생)', 'Q9-최소값(학생)', 'Q9-로직설명(학생)',
     'Q9-최대값(정답)', 'Q9-최소값(정답)',
@@ -120,7 +120,7 @@ function buildRow(d) {
     'q5_r1','q5_r2','q5_r3','q5_r4','q5_r5','q5_r6',
     'q6',
     'q7_1','q7_2',
-    'q8_cost',
+    'q8_path','q8_cost',
     'q9_max','q9_min',
     'q10_1','q10_2','q10_3','q10_4',
     'qs_1','qs_3'
@@ -152,13 +152,13 @@ function buildRow(d) {
     d.ans_q4_a, d.ans_q4_b, d.ans_q4_c,
     d.q4_r1, d.q4_r2, d.q4_r3, d.q4_r4, d.q4_r5, d.q4_r6,
     d.ans_q4_r1, d.ans_q4_r2, d.ans_q4_r3, d.ans_q4_r4, d.ans_q4_r5, d.ans_q4_r6,
-    d.q5_a, d.q5_b, d.q5_c,
-    d.ans_q5_a, d.ans_q5_b, d.ans_q5_c,
+    d.q5_a, d.q5_op1, d.q5_b, d.q5_op2, d.q5_c,
+    d.ans_q5_a, d.ans_q5_op1, d.ans_q5_b, d.ans_q5_op2, d.ans_q5_c,
     d.q5_r1, d.q5_r2, d.q5_r3, d.q5_r4, d.q5_r5, d.q5_r6,
     d.ans_q5_r1, d.ans_q5_r2, d.ans_q5_r3, d.ans_q5_r4, d.ans_q5_r5, d.ans_q5_r6,
     d.q6, d.ans_q6,
     d.q7_1, d.q7_2, d.ans_q7_1, d.ans_q7_2,
-    d.q8_path, d.q8_cost, d.ans_q8_cost,
+    d.q8_path, d.ans_q8_path, d.q8_cost, d.ans_q8_cost,
     d.q9_max, d.q9_min, d.q9_logic,
     d.ans_q9_max, d.ans_q9_min,
     d.q10_1, d.q10_2, d.q10_3, d.q10_4,
