@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML / CNN 기초 레벨 테스트</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --border: #d6d1c7;
+  --border-dark: #a09890;
+  --text: #1a1714;
+  --text-muted: #6b6560;
+  --accent: #2a4a8a;
+  --accent-light: #e8edf7;
+  --correct: #1a6b3a;
+  --correct-bg: #e6f4ec;
+  --warn: #7a4a00;
+  --warn-bg: #fdf3e0;
+  --code-bg: #1e1e2e;
+  --code-text: #cdd6f4;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  background: var(--text);
+  color: #fff;
+  padding: 2rem 2rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.08);
+}
+.site-header::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 40px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.05);
+}
+.header-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.5);
+  margin-bottom: .5rem;
+  text-transform: uppercase;
+}
+.header-title {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  margin-bottom: .3rem;
+}
+.header-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.5);
+}
+
+/* Name input section */
+.name-section {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.name-section label {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.name-input {
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--bg);
+  outline: none;
+  transition: border-color .2s;
+}
+.name-input:focus { border-color: var(--accent); }
+.name-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Progress bar */
+.progress-bar-wrap {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: .75rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.progress-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width .4s ease;
+  width: 0%;
+}
+.progress-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Main layout */
+.main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* Question card */
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.q-card:focus-within { box-shadow: 0 0 0 2px var(--accent); }
+
+.q-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.q-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--text);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.q-num.optional {
+  background: var(--accent);
+}
+.q-title {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.q-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+.q-body { padding: 1.25rem 1.5rem; }
+
+/* Scenario box */
+.scenario {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: .9rem 1rem;
+  font-size: 14px;
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+}
+
+/* Hint box */
+.hint-box {
+  background: var(--warn-bg);
+  border: 1px solid #e8c97a;
+  border-radius: var(--radius);
+  padding: .7rem 1rem;
+  font-size: 13px;
+  color: var(--warn);
+  margin-bottom: 1.25rem;
+}
+
+/* Table */
+.q-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 1.25rem;
+}
+.q-table th {
+  background: var(--bg);
+  padding: 7px 10px;
+  text-align: left;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.q-table td {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+/* Code block */
+.code-block {
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Sub-question */
+.sub-q {
+  margin-bottom: 1.25rem;
+}
+.sub-q-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: .6rem;
+  color: var(--text);
+}
+
+/* Radio / checkbox options */
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background .15s, border-color .15s;
+  line-height: 1.5;
+}
+.option-label:hover { background: var(--accent-light); border-color: var(--accent); }
+.option-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--accent); }
+.option-label.selected { background: var(--accent-light); border-color: var(--accent); }
+
+/* Text / textarea inputs */
+.text-input, .textarea-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+  resize: vertical;
+}
+.text-input:focus, .textarea-input:focus { border-color: var(--accent); }
+.textarea-input { min-height: 80px; line-height: 1.6; }
+
+/* True/False grid */
+.tf-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+.tf-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 100px 100px;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tf-row:last-child { border-bottom: none; }
+.tf-row-header {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding-bottom: 4px;
+}
+.tf-select {
+  padding: 5px 8px;
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  background: var(--bg);
+  cursor: pointer;
+  width: 100%;
+  outline: none;
+}
+
+/* Submit section */
+.submit-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+}
+.submit-btn {
+  background: var(--text);
+  color: #fff;
+  border: none;
+  padding: 14px 48px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  cursor: pointer;
+  letter-spacing: .02em;
+  transition: background .2s, transform .1s;
+}
+.submit-btn:hover { background: var(--accent); }
+.submit-btn:active { transform: scale(.98); }
+.submit-btn:disabled { background: var(--border-dark); cursor: not-allowed; }
+.submit-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: .75rem;
+}
+
+/* Result overlay */
+.result-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,23,20,.85);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.result-overlay.show { display: flex; }
+.result-card {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+}
+.result-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.result-title { font-size: 1.3rem; font-weight: 500; margin-bottom: .5rem; }
+.result-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+.result-score {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin: 1rem 0;
+}
+.result-close {
+  margin-top: 1.5rem;
+  background: var(--text);
+  color: #fff;
+  border: none;
+  padding: 10px 32px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  z-index: 200;
+  transition: transform .3s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Section separator */
+.section-sep {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 2rem 0 1.5rem;
+}
+.section-sep-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.section-sep-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+@media (max-width: 600px) {
+  .site-header { padding: 1.5rem 1.25rem 1.25rem; }
+  .name-section { padding: 1.25rem; }
+  .main { padding: 1.5rem 1rem 3rem; }
+  .q-head, .q-body { padding: 1rem 1.1rem; }
+  .tf-row { grid-template-columns: 24px 1fr 80px 80px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-label">Level Test · ML / CNN 기초 수업</div>
+  <div class="header-title">논리 사고력 레벨 테스트</div>
+  <div class="header-sub">총 10문항 + 선택 1문항 · 예상 소요 시간 20–30분</div>
+</header>
+
+<div class="name-section">
+  <label for="student-name">이름</label>
+  <input type="text" id="student-name" class="name-input" placeholder="홍길동" autocomplete="off">
+  <span class="name-hint">제출 전에 반드시 입력하세요</span>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-label" id="progress-label">0 / 11 답변</div>
+</div>
+
+<main class="main">
+
+<!-- ────────── Q1 ────────── -->
+<div class="section-sep">
+  <div class="section-sep-label">Boolean 기초</div>
+  <div class="section-sep-line"></div>
+</div>
+
+<div class="q-card" id="card-q1">
+  <div class="q-head">
+    <div class="q-num">Q1</div>
+    <div>
+      <div class="q-title">간식 자판기 — 로직 완성 & 결과 판단</div>
+      <div class="q-subtitle">AND · OR · True / False</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      학교 복도 자판기에서 간식이 나오려면:<br>
+      <strong>돈을 넣었고 버튼을 눌렀으면</strong> 간식이 나온다.<br>
+      또는 <strong>무료 쿠폰이 있으면</strong> 간식이 나온다.
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">1-1. 로직을 완성하시오</div>
+      <div style="font-size:14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1rem; line-height:2.2; font-family:'IBM Plex Mono',monospace;">
+        간식이 나온다 = (<input type="text" id="q1_a" class="text-input" style="width:160px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 A"> AND <input type="text" id="q1_b" class="text-input" style="width:160px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 B">) OR (<input type="text" id="q1_c" class="text-input" style="width:160px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 C">)
+      </div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">1-2. 아래 상황에서 간식이 나오는지 True / False로 답하시오</div>
+      <div class="tf-grid">
+        <div class="tf-row tf-row-header">
+          <span>#</span><span>조건 상황</span><span style="text-align:center">정답</span><span></span>
+        </div>
+        <div class="tf-row"><span>1</span><span>돈 ✓ 버튼 ✓ 쿠폰 ✗</span><select id="q1_r1" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>2</span><span>돈 ✓ 버튼 ✗ 쿠폰 ✗</span><select id="q1_r2" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>3</span><span>돈 ✗ 버튼 ✓ 쿠폰 ✗</span><select id="q1_r3" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>4</span><span>돈 ✗ 버튼 ✗ 쿠폰 ✓</span><select id="q1_r4" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>5</span><span>돈 ✓ 버튼 ✗ 쿠폰 ✓</span><select id="q1_r5" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q2 ────────── -->
+<div class="q-card" id="card-q2">
+  <div class="q-head">
+    <div class="q-num">Q2</div>
+    <div>
+      <div class="q-title">자동 잠금 시스템 — NOT 조건</div>
+      <div class="q-subtitle">AND · OR · NOT (부정 표현)</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      건물 자동 잠금 시스템:<br>
+      <strong>사람이 없고 마지막 퇴실 후 10분이 지났으면</strong> 문이 잠긴다.<br>
+      또는 <strong>비상 잠금 버튼이 눌렸으면</strong> 문이 잠긴다.<br><br>
+      사용할 조건: [사람이 있다] &nbsp;[10분이 지났다] &nbsp;[비상 버튼이 눌렸다]
+    </div>
+
+    <div class="hint-box">
+      💡 힌트: 조건 목록을 그대로 쓸 수도 있고, 조건 앞에 무언가를 붙여야 할 수도 있다.
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">2-1. 로직을 완성하시오</div>
+      <div style="font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1rem; line-height:2.4; font-family:'IBM Plex Mono',monospace;">
+        문이 잠긴다 = (<input type="text" id="q2_a" class="text-input" style="width:200px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="첫 번째 조건"> AND <input type="text" id="q2_b" class="text-input" style="width:140px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="두 번째 조건">) OR (<input type="text" id="q2_c" class="text-input" style="width:180px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="세 번째 조건">)
+      </div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">2-2. 결과를 True / False로 답하시오</div>
+      <div class="tf-grid">
+        <div class="tf-row tf-row-header"><span>#</span><span>상황 (사람 있다 / 10분 / 비상버튼)</span><span style="text-align:center">정답</span><span></span></div>
+        <div class="tf-row"><span>1</span><span>False / True / False</span><select id="q2_r1" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>2</span><span>False / False / False</span><select id="q2_r2" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>3</span><span>True / True / False</span><select id="q2_r3" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>4</span><span>False / False / True</span><select id="q2_r4" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>5</span><span>True / False / True</span><select id="q2_r5" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>6</span><span>False / True / True</span><select id="q2_r6" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q3 ────────── -->
+<div class="q-card" id="card-q3">
+  <div class="q-head">
+    <div class="q-num">Q3</div>
+    <div>
+      <div class="q-title">자동 조명 — 자연어 → 논리식 변환</div>
+      <div class="q-subtitle">자연어 조건 → Boolean 식</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      교실 자동 조명:<br>
+      <strong>교실이 어둡고 사람이 있으면</strong> 조명이 켜진다.<br>
+      또는 <strong>청소 모드가 켜져 있으면</strong> 조명이 켜진다.<br><br>
+      사용할 조건: [교실이 어둡다] &nbsp;[사람이 있다] &nbsp;[청소 모드이다]
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">3-1. 로직을 완성하시오</div>
+      <div style="font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1rem; line-height:2.4; font-family:'IBM Plex Mono',monospace;">
+        조명이 켜진다 = (<input type="text" id="q3_a" class="text-input" style="width:155px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 A"> AND <input type="text" id="q3_b" class="text-input" style="width:130px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 B">) OR (<input type="text" id="q3_c" class="text-input" style="width:130px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 C">)
+      </div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">3-2. 결과를 True / False로 답하시오</div>
+      <div class="tf-grid">
+        <div class="tf-row tf-row-header"><span>#</span><span>어둡다 / 사람 있다 / 청소 모드</span><span style="text-align:center">정답</span><span></span></div>
+        <div class="tf-row"><span>1</span><span>True / True / False</span><select id="q3_r1" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>2</span><span>True / False / False</span><select id="q3_r2" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>3</span><span>False / True / False</span><select id="q3_r3" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>4</span><span>False / False / True</span><select id="q3_r4" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>5</span><span>True / False / True</span><select id="q3_r5" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>6</span><span>False / True / True</span><select id="q3_r6" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>7</span><span>False / False / False</span><select id="q3_r7" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q4 ────────── -->
+<div class="q-card" id="card-q4">
+  <div class="q-head">
+    <div class="q-num">Q4</div>
+    <div>
+      <div class="q-title">교량 안전 경보 시스템</div>
+      <div class="q-subtitle">토목 소재 · AND / OR 빈칸 완성</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      교량 안전 모니터링 경보 조건:<br>
+      <strong>균열이 감지되고 진동이 기준치를 초과하면</strong> 경보가 울린다.<br>
+      또는 <strong>홍수 경보가 발령되면</strong> 경보가 울린다.<br><br>
+      사용할 조건: [균열이 감지됐다] &nbsp;[진동이 기준치를 초과했다] &nbsp;[홍수 경보가 발령됐다]
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">4-1. 로직을 완성하시오</div>
+      <div style="font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1rem; line-height:2.4; font-family:'IBM Plex Mono',monospace;">
+        경보가 울린다 = (<input type="text" id="q4_a" class="text-input" style="width:170px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 A"> AND <input type="text" id="q4_b" class="text-input" style="width:200px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 B">) OR (<input type="text" id="q4_c" class="text-input" style="width:185px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="조건 C">)
+      </div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">4-2. 결과를 True / False로 답하시오</div>
+      <div class="tf-grid">
+        <div class="tf-row tf-row-header"><span>#</span><span>균열 / 진동 초과 / 홍수 경보</span><span style="text-align:center">정답</span><span></span></div>
+        <div class="tf-row"><span>1</span><span>True / True / False</span><select id="q4_r1" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>2</span><span>True / False / False</span><select id="q4_r2" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>3</span><span>False / True / False</span><select id="q4_r3" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>4</span><span>False / False / True</span><select id="q4_r4" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>5</span><span>True / False / True</span><select id="q4_r5" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>6</span><span>False / True / True</span><select id="q4_r6" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q5 ────────── -->
+<div class="section-sep">
+  <div class="section-sep-label">집합 · 계수 사고</div>
+  <div class="section-sep-line"></div>
+</div>
+
+<div class="q-card" id="card-q5">
+  <div class="q-head">
+    <div class="q-num">Q5</div>
+    <div>
+      <div class="q-title">이벤트 초대 대상 — 집합 사고</div>
+      <div class="q-subtitle">AND = 교집합 · OR = 합집합</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="hint-box">
+      💡 힌트: AND는 곱셈처럼 — 둘 다 만족해야 한다 / OR는 덧셈처럼 — 하나만 만족해도 된다
+    </div>
+    <div class="scenario">
+      조교 후보 조건: <strong>코딩 경험이 있고 수학을 좋아하는 사람</strong> 또는 <strong>프로젝트 경험이 있는 사람</strong><br>
+      A = 코딩 경험 &nbsp; B = 수학 선호 &nbsp; C = 프로젝트 경험
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">5-1. 로직을 완성하시오</div>
+      <div style="font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1rem; line-height:2.4; font-family:'IBM Plex Mono',monospace;">
+        조교 후보 = (<input type="text" id="q5_a" class="text-input" style="width:60px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="  "> AND <input type="text" id="q5_b" class="text-input" style="width:60px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="  ">) OR (<input type="text" id="q5_c" class="text-input" style="width:60px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="  ">)
+      </div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">5-2. 조교 후보 여부를 True / False로 답하시오</div>
+      <div class="tf-grid">
+        <div class="tf-row tf-row-header"><span>#</span><span>A 코딩 / B 수학 / C 프로젝트</span><span style="text-align:center">정답</span><span></span></div>
+        <div class="tf-row"><span>1</span><span>True / True / False</span><select id="q5_r1" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>2</span><span>True / False / False</span><select id="q5_r2" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>3</span><span>False / True / False</span><select id="q5_r3" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>4</span><span>False / False / True</span><select id="q5_r4" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>5</span><span>True / False / True</span><select id="q5_r5" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+        <div class="tf-row"><span>6</span><span>False / True / True</span><select id="q5_r6" class="tf-select"><option value="">선택</option><option>True</option><option>False</option></select><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q6 ────────── -->
+<div class="q-card" id="card-q6">
+  <div class="q-head">
+    <div class="q-num">Q6</div>
+    <div>
+      <div class="q-title">심화반 추천 — 결과표 역추론</div>
+      <div class="q-subtitle">결과를 보고 Boolean 식 찾기</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      A = 코딩 경험 &nbsp; B = 수학 기초 &nbsp; C = 자기주도 학습
+    </div>
+    <table class="q-table">
+      <thead><tr><th>학생</th><th>A</th><th>B</th><th>C</th><th>심화반 추천</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>T</td><td>T</td><td>F</td><td>✅ True</td></tr>
+        <tr><td>2</td><td>T</td><td>F</td><td>F</td><td>❌ False</td></tr>
+        <tr><td>3</td><td>F</td><td>T</td><td>F</td><td>❌ False</td></tr>
+        <tr><td>4</td><td>F</td><td>F</td><td>T</td><td>✅ True</td></tr>
+        <tr><td>5</td><td>T</td><td>F</td><td>T</td><td>✅ True</td></tr>
+        <tr><td>6</td><td>F</td><td>T</td><td>T</td><td>✅ True</td></tr>
+        <tr><td>7</td><td>F</td><td>F</td><td>F</td><td>❌ False</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-q">
+      <div class="sub-q-label">위 결과와 맞는 로직을 고르시오</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q6" value="A AND B AND C"> ① A AND B AND C</label>
+        <label class="option-label"><input type="radio" name="q6" value="(A AND B) OR C"> ② (A AND B) OR C</label>
+        <label class="option-label"><input type="radio" name="q6" value="A OR B OR C"> ③ A OR B OR C</label>
+        <label class="option-label"><input type="radio" name="q6" value="A AND (B OR C)"> ④ A AND (B OR C)</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q7 ────────── -->
+<div class="q-card" id="card-q7">
+  <div class="q-head">
+    <div class="q-num">Q7</div>
+    <div>
+      <div class="q-title">조건 만족 인원 구하기</div>
+      <div class="q-subtitle">AND / OR → 수치 계산</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      어떤 수업에 학생 100명이 있다.<br>
+      A = 수학 기초가 있다 → 70명<br>
+      B = 코딩 경험이 있다 → 40명<br>
+      (A와 B는 서로 관계없다고 가정)
+    </div>
+    <div class="hint-box">
+      💡 힌트: AND는 곱셈처럼 / OR는 더하는데 이미 두 번 센 사람을 한 번 빼야 한다
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">7-1. A AND B를 동시에 만족하는 학생은 몇 명인가?</div>
+      <input type="number" id="q7_1" class="text-input" style="max-width:120px;" placeholder="명">
+    </div>
+    <div class="sub-q">
+      <div class="sub-q-label">7-2. A OR B를 만족하는 학생은 몇 명인가?</div>
+      <input type="number" id="q7_2" class="text-input" style="max-width:120px;" placeholder="명">
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q8 ────────── -->
+<div class="section-sep">
+  <div class="section-sep-label">최적화 · 비교 · 정렬</div>
+  <div class="section-sep-line"></div>
+</div>
+
+<div class="q-card" id="card-q8">
+  <div class="q-head">
+    <div class="q-num">Q8</div>
+    <div>
+      <div class="q-title">최적 경로 찾기</div>
+      <div class="q-subtitle">weight · cost · optimization</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      로봇이 Start → Goal까지 <strong>오른쪽 또는 아래쪽</strong>으로만 이동할 수 있다.<br>
+      각 칸 숫자 = 이동 비용. 총합이 가장 작은 경로를 찾으시오.
+    </div>
+    <div class="code-block">Start | 2 | 4 | 1
+  3   | 8 | 2 | 3
+  1   | 1 | 2 | 9
+  6   | 1 | 1 | Goal</div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">이동 경로를 적으시오 (예: 아래 → 오른쪽 → …)</div>
+      <input type="text" id="q8_path" class="text-input" placeholder="아래 → 아래 → 오른쪽 → ...">
+    </div>
+    <div class="sub-q">
+      <div class="sub-q-label">총 비용</div>
+      <input type="number" id="q8_cost" class="text-input" style="max-width:120px;" placeholder="숫자만">
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q9 ────────── -->
+<div class="q-card" id="card-q9">
+  <div class="q-head">
+    <div class="q-num">Q9</div>
+    <div>
+      <div class="q-title">최대값 / 최소값 찾기</div>
+      <div class="q-subtitle">비교 · 갱신 · argmax / max pooling 기초</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      이미지 밝기값: &nbsp; A = 3 &nbsp; B = 8 &nbsp; C = 2 &nbsp; D = 6
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">9-1. 최대값</div>
+      <input type="number" id="q9_max" class="text-input" style="max-width:120px;" placeholder="">
+    </div>
+    <div class="sub-q">
+      <div class="sub-q-label">9-2. 최소값</div>
+      <input type="number" id="q9_min" class="text-input" style="max-width:120px;" placeholder="">
+    </div>
+    <div class="sub-q">
+      <div class="sub-q-label">9-3. 최대값을 찾는 방법을 순서대로 설명하시오</div>
+      <textarea id="q9_logic" class="textarea-input" placeholder="처음에는 A의 값을 최대값이라고 생각한다. 그다음 B와 비교한다..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q10 ────────── -->
+<div class="q-card" id="card-q10">
+  <div class="q-head">
+    <div class="q-num">Q10</div>
+    <div>
+      <div class="q-title">정렬 로직</div>
+      <div class="q-subtitle">ranking · top-k selection</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario">
+      모델 점수: A = 72 &nbsp; B = 85 &nbsp; C = 68 &nbsp; D = 91 &nbsp; (높을수록 좋음)
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">10-1. 높은 점수 순서로 정렬하시오</div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
+        <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">1등</div><input type="text" id="q10_1" class="text-input" placeholder="모델"></div>
+        <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">2등</div><input type="text" id="q10_2" class="text-input" placeholder="모델"></div>
+        <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">3등</div><input type="text" id="q10_3" class="text-input" placeholder="모델"></div>
+        <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">4등</div><input type="text" id="q10_4" class="text-input" placeholder="모델"></div>
+      </div>
+    </div>
+    <div class="sub-q">
+      <div class="sub-q-label">10-2. 정렬 방법을 순서대로 설명하시오</div>
+      <textarea id="q10_logic" class="textarea-input" placeholder="먼저 가장 높은 점수를 찾는다..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Q★ ────────── -->
+<div class="section-sep">
+  <div class="section-sep-label">★ 선택 문항 (감점 없음)</div>
+  <div class="section-sep-line"></div>
+</div>
+
+<div class="q-card" id="card-qstar">
+  <div class="q-head">
+    <div class="q-num optional">★</div>
+    <div>
+      <div class="q-title">Pseudocode 읽기 <span style="font-size:12px;color:var(--text-muted);font-weight:400;">— 선택 문항, 틀려도 감점 없음</span></div>
+      <div class="q-subtitle">코드 흐름 · 변수 · 조건문</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="scenario" style="margin-bottom:.75rem;">아래는 어떤 규칙을 글로 쓴 의사코드(pseudocode)이다. 실제 코드가 아니라 "순서를 글로 쓴 것"으로 읽으면 된다.</div>
+    <div class="code-block">scores = [72, 85, 68, 91, 79]
+
+best = scores[0]
+
+FOR each score IN scores:
+    IF score > best:
+        best = score
+
+PRINT best</div>
+
+    <div class="sub-q">
+      <div class="sub-q-label">★-1. 이 코드가 최종적으로 출력하는 값은?</div>
+      <input type="number" id="qs_1" class="text-input" style="max-width:120px;" placeholder="">
+    </div>
+    <div class="sub-q">
+      <div class="sub-q-label">★-2. <code style="background:var(--bg);padding:2px 6px;border-radius:3px;font-size:13px;">best = scores[0]</code> 줄의 역할을 자신의 말로 설명하시오</div>
+      <textarea id="qs_2" class="textarea-input" placeholder="자유 서술..."></textarea>
+    </div>
+    <div class="sub-q">
+      <div class="sub-q-label">★-3. 가장 <u>작은</u> 값을 찾으려면 IF 조건을 어떻게 바꿔야 하는가?</div>
+      <div style="font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1rem; font-family:'IBM Plex Mono',monospace;">
+        IF score <input type="text" id="qs_3" class="text-input" style="width:60px;display:inline-block;padding:4px 8px;margin:0 4px;" placeholder="?"> best: → best = score
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── Submit ────────── -->
+<div class="submit-section">
+  <div style="font-size:14px;color:var(--text-muted);margin-bottom:1.25rem;">모든 문항을 작성했으면 제출하세요.</div>
+  <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">답안 제출하기</button>
+  <div class="submit-note" id="submit-note">이름을 입력하고 제출하면 구글 시트에 자동 저장됩니다</div>
+</div>
+
+</main>
+
+<!-- Result overlay -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="result-icon">✅</div>
+    <div class="result-title">제출 완료</div>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-body" id="result-body"></div>
+    <button class="result-close" onclick="document.getElementById('result-overlay').classList.remove('show')">확인</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────
+// ★ 여기에 Google Apps Script 웹앱 URL을 붙여넣으세요
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+// ──────────────────────────────────────────────
+
+// 정답 데이터
+const ANSWERS = {
+  q1_a: '돈을 넣었다', q1_b: '버튼을 눌렀다', q1_c: '무료 쿠폰이 있다',
+  q1_r1:'True', q1_r2:'False', q1_r3:'False', q1_r4:'True', q1_r5:'True',
+
+  q2_a: 'NOT 사람이 있다', q2_b: '10분이 지났다', q2_c: '비상 버튼이 눌렸다',
+  q2_r1:'True', q2_r2:'False', q2_r3:'False', q2_r4:'True', q2_r5:'True', q2_r6:'True',
+
+  q3_a: '교실이 어둡다', q3_b: '사람이 있다', q3_c: '청소 모드이다',
+  q3_r1:'True', q3_r2:'False', q3_r3:'False', q3_r4:'True', q3_r5:'True', q3_r6:'True', q3_r7:'False',
+
+  q4_a: '균열이 감지됐다', q4_b: '진동이 기준치를 초과했다', q4_c: '홍수 경보가 발령됐다',
+  q4_r1:'True', q4_r2:'False', q4_r3:'False', q4_r4:'True', q4_r5:'True', q4_r6:'True',
+
+  q5_a:'A', q5_b:'B', q5_c:'C',
+  q5_r1:'True', q5_r2:'False', q5_r3:'False', q5_r4:'True', q5_r5:'True', q5_r6:'True',
+
+  q6: '(A AND B) OR C',
+
+  q7_1: '28', q7_2: '82',
+
+  q8_path: '아래 → 아래 → 오른쪽 → 아래 → 오른쪽 → 오른쪽', q8_cost: '7',
+
+  q9_max: '8', q9_min: '2',
+
+  q10_1:'D', q10_2:'B', q10_3:'A', q10_4:'C',
+
+  qs_1: '91', qs_3: '<'
+};
+
+// 주관식 서술형은 자동 채점 제외 (q9_logic, q10_logic, q2_a 등 not in auto-check)
+const AUTO_GRADE_KEYS = [
+  'q1_r1','q1_r2','q1_r3','q1_r4','q1_r5',
+  'q2_r1','q2_r2','q2_r3','q2_r4','q2_r5','q2_r6',
+  'q3_r1','q3_r2','q3_r3','q3_r4','q3_r5','q3_r6','q3_r7',
+  'q4_r1','q4_r2','q4_r3','q4_r4','q4_r5','q4_r6',
+  'q5_r1','q5_r2','q5_r3','q5_r4','q5_r5','q5_r6',
+  'q6',
+  'q7_1','q7_2',
+  'q8_cost',
+  'q9_max','q9_min',
+  'q10_1','q10_2','q10_3','q10_4',
+  'qs_1','qs_3'
+];
+
+// 진행률 업데이트
+function updateProgress() {
+  const allInputs = document.querySelectorAll('input[type=text], input[type=number], select, textarea, input[type=radio]:checked');
+  let filled = 0;
+  const ids = ['q1_a','q1_b','q1_c','q1_r1','q1_r2','q1_r3','q1_r4','q1_r5',
+    'q2_a','q2_b','q2_c','q2_r1','q2_r2','q2_r3','q2_r4','q2_r5','q2_r6',
+    'q3_a','q3_b','q3_c','q3_r1','q3_r2','q3_r3','q3_r4','q3_r5','q3_r6','q3_r7',
+    'q4_a','q4_b','q4_c','q4_r1','q4_r2','q4_r3','q4_r4','q4_r5','q4_r6',
+    'q5_a','q5_b','q5_c','q5_r1','q5_r2','q5_r3','q5_r4','q5_r5','q5_r6',
+    'q7_1','q7_2','q8_path','q8_cost','q9_max','q9_min','q9_logic',
+    'q10_1','q10_2','q10_3','q10_4','q10_logic'];
+  const total = ids.length + 1; // +1 for q6 radio
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value.trim() !== '') filled++;
+  });
+  if (document.querySelector('input[name=q6]:checked')) filled++;
+
+  document.getElementById('progress-fill').style.width = Math.round(filled/total*100) + '%';
+  document.getElementById('progress-label').textContent = filled + ' / ' + total + ' 답변';
+}
+
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', updateProgress);
+  el.addEventListener('change', updateProgress);
+});
+document.querySelectorAll('.option-label').forEach(label => {
+  label.querySelector('input').addEventListener('change', () => {
+    document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+    if (label.querySelector('input').checked) label.classList.add('selected');
+  });
+});
+
+// 값 가져오기
+function getVal(id) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  return el.value.trim();
+}
+function getRadio(name) {
+  const el = document.querySelector(`input[name=${name}]:checked`);
+  return el ? el.value : '';
+}
+
+// 채점
+function gradeAnswers(studentAnswers) {
+  let correct = 0, total = AUTO_GRADE_KEYS.length;
+  AUTO_GRADE_KEYS.forEach(key => {
+    const ans = ANSWERS[key];
+    const student = studentAnswers[key] || '';
+    if (ans && student.toLowerCase().replace(/\s/g,'') === ans.toLowerCase().replace(/\s/g,'')) correct++;
+  });
+  return { correct, total };
+}
+
+// 토스트
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// 제출
+async function submitQuiz() {
+  const name = document.getElementById('student-name').value.trim();
+  if (!name) { showToast('이름을 입력해주세요'); return; }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '제출 중...';
+
+  const studentAnswers = {
+    name,
+    timestamp: new Date().toLocaleString('ko-KR'),
+    // Q1
+    q1_a: getVal('q1_a'), q1_b: getVal('q1_b'), q1_c: getVal('q1_c'),
+    q1_r1: getVal('q1_r1'), q1_r2: getVal('q1_r2'), q1_r3: getVal('q1_r3'), q1_r4: getVal('q1_r4'), q1_r5: getVal('q1_r5'),
+    // Q2
+    q2_a: getVal('q2_a'), q2_b: getVal('q2_b'), q2_c: getVal('q2_c'),
+    q2_r1: getVal('q2_r1'), q2_r2: getVal('q2_r2'), q2_r3: getVal('q2_r3'), q2_r4: getVal('q2_r4'), q2_r5: getVal('q2_r5'), q2_r6: getVal('q2_r6'),
+    // Q3
+    q3_a: getVal('q3_a'), q3_b: getVal('q3_b'), q3_c: getVal('q3_c'),
+    q3_r1: getVal('q3_r1'), q3_r2: getVal('q3_r2'), q3_r3: getVal('q3_r3'), q3_r4: getVal('q3_r4'), q3_r5: getVal('q3_r5'), q3_r6: getVal('q3_r6'), q3_r7: getVal('q3_r7'),
+    // Q4
+    q4_a: getVal('q4_a'), q4_b: getVal('q4_b'), q4_c: getVal('q4_c'),
+    q4_r1: getVal('q4_r1'), q4_r2: getVal('q4_r2'), q4_r3: getVal('q4_r3'), q4_r4: getVal('q4_r4'), q4_r5: getVal('q4_r5'), q4_r6: getVal('q4_r6'),
+    // Q5
+    q5_a: getVal('q5_a'), q5_b: getVal('q5_b'), q5_c: getVal('q5_c'),
+    q5_r1: getVal('q5_r1'), q5_r2: getVal('q5_r2'), q5_r3: getVal('q5_r3'), q5_r4: getVal('q5_r4'), q5_r5: getVal('q5_r5'), q5_r6: getVal('q5_r6'),
+    // Q6
+    q6: getRadio('q6'),
+    // Q7
+    q7_1: getVal('q7_1'), q7_2: getVal('q7_2'),
+    // Q8
+    q8_path: getVal('q8_path'), q8_cost: getVal('q8_cost'),
+    // Q9
+    q9_max: getVal('q9_max'), q9_min: getVal('q9_min'), q9_logic: getVal('q9_logic'),
+    // Q10
+    q10_1: getVal('q10_1'), q10_2: getVal('q10_2'), q10_3: getVal('q10_3'), q10_4: getVal('q10_4'),
+    q10_logic: getVal('q10_logic'),
+    // Q★
+    qs_1: getVal('qs_1'), qs_2: getVal('qs_2'), qs_3: getVal('qs_3'),
+  };
+
+  // 정답 추가
+  const answerRow = {};
+  Object.keys(ANSWERS).forEach(k => { answerRow['ans_' + k] = ANSWERS[k]; });
+
+  const payload = { ...studentAnswers, ...answerRow };
+
+  const { correct, total } = gradeAnswers(studentAnswers);
+
+  // Google Apps Script 전송
+  try {
+    if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+    // 결과 표시
+    document.getElementById('result-score').textContent = correct + ' / ' + total + ' 정답';
+    document.getElementById('result-body').textContent =
+      `${name}님의 답안이 제출되었습니다.\n자동 채점 가능한 ${total}문항 중 ${correct}문항 정답.\n서술형 문항은 교사가 별도로 채점합니다.`;
+    document.getElementById('result-overlay').classList.add('show');
+  } catch(e) {
+    showToast('제출 중 오류가 발생했습니다. 다시 시도해주세요.');
+    btn.disabled = false;
+    btn.textContent = '답안 제출하기';
+  }
+}
+</script>
+</body>
+</html>
