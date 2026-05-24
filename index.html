@@ -176,6 +176,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .cond-card.selected-card::before { content: '✓'; margin-right: 6px; color: var(--accent-strong); font-weight: 700; }
 .cond-card.placed { opacity: .45; cursor: default; pointer-events: none; }
 .cond-card.placed::after { content: '사용됨'; margin-left: 8px; color: var(--text-muted); font-size: 11px; font-weight: 400; }
+.cond-card[data-reusable="true"]::after { content: '반복'; margin-left: 8px; color: var(--accent-strong); font-size: 11px; font-weight: 400; }
 
 /* Logic builder row */
 .logic-builder {
@@ -364,7 +365,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 
       <div class="card-pool" id="pool-q1" data-required="3">
         <div class="card-pool-header">
-          <div class="card-pool-title">조건 카드</div>
+          <div class="card-pool-title">조건 / 연산자 카드</div>
           <div class="card-pool-meta" id="pool-q1-count">0 / 3 배치</div>
         </div>
         <div class="card-pool-guide">후보 6개 중 로직에 필요한 카드 3개만 골라 빈칸에 배치하세요.</div>
@@ -661,15 +662,15 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
           <div class="card-pool-title">조건 카드</div>
           <div class="card-pool-meta" id="pool-q5-count">0 / 5 배치</div>
         </div>
-        <div class="card-pool-guide">A, B, C와 AND, OR 카드를 모두 사용해 Boolean 식을 완성하세요.</div>
+        <div class="card-pool-guide">A, B, C는 한 번씩 쓰고, AND와 OR 연산자는 필요하면 여러 번 사용할 수 있습니다.</div>
         <div class="card-group">
           <div class="card-group-title">후보 카드</div>
           <div class="card-list">
             <div class="cond-card" data-pool="pool-q5" data-value="A" draggable="true">A</div>
             <div class="cond-card" data-pool="pool-q5" data-value="B" draggable="true">B</div>
             <div class="cond-card" data-pool="pool-q5" data-value="C" draggable="true">C</div>
-            <div class="cond-card" data-pool="pool-q5" data-value="AND" draggable="true">AND</div>
-            <div class="cond-card" data-pool="pool-q5" data-value="OR" draggable="true">OR</div>
+            <div class="cond-card" data-pool="pool-q5" data-value="AND" data-reusable="true" draggable="true">AND</div>
+            <div class="cond-card" data-pool="pool-q5" data-value="OR" data-reusable="true" draggable="true">OR</div>
           </div>
         </div>
       </div>
@@ -802,16 +803,12 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
           <div class="card-pool-title">방향 카드</div>
           <div class="card-pool-meta" id="pool-q8-count">0 / 6 배치</div>
         </div>
-        <div class="card-pool-guide">Start에서 Goal까지 이동하는 방향을 왼쪽부터 차례대로 배치하세요.</div>
+        <div class="card-pool-guide">오른쪽과 아래 카드는 여러 번 사용할 수 있습니다. 이동 방향을 왼쪽부터 차례대로 배치하세요.</div>
         <div class="card-group">
           <div class="card-group-title">후보 카드</div>
           <div class="card-list">
-            <div class="cond-card direction-card" data-pool="pool-q8" data-value="오른쪽" draggable="true">오른쪽</div>
-            <div class="cond-card direction-card" data-pool="pool-q8" data-value="오른쪽" draggable="true">오른쪽</div>
-            <div class="cond-card direction-card" data-pool="pool-q8" data-value="오른쪽" draggable="true">오른쪽</div>
-            <div class="cond-card direction-card" data-pool="pool-q8" data-value="아래" draggable="true">아래</div>
-            <div class="cond-card direction-card" data-pool="pool-q8" data-value="아래" draggable="true">아래</div>
-            <div class="cond-card direction-card" data-pool="pool-q8" data-value="아래" draggable="true">아래</div>
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="오른쪽" data-reusable="true" draggable="true">오른쪽</div>
+            <div class="cond-card direction-card" data-pool="pool-q8" data-value="아래" data-reusable="true" draggable="true">아래</div>
           </div>
         </div>
       </div>
@@ -1009,6 +1006,10 @@ const slotValues = {};   // slotId → value
 const slotCardIds = {};  // slotId → source card id
 let selectedCard = null; // tap mode: currently selected card
 
+function isReusableCard(card) {
+  return !!(card && card.dataset.reusable === 'true');
+}
+
 function initDragDrop() {
   // ── Draggable cards ──
   document.querySelectorAll('.cond-card').forEach((card, index) => {
@@ -1027,7 +1028,7 @@ function initDragDrop() {
 
     // Tap/click on card
     card.addEventListener('click', () => {
-      if (card.classList.contains('placed')) return;
+      if (card.classList.contains('placed') && !isReusableCard(card)) return;
       if (selectedCard === card) {
         card.classList.remove('selected-card');
         selectedCard = null;
@@ -1098,7 +1099,6 @@ function placeCard(slot, value, poolId, cardId) {
   if (slotValues[slot.id]) clearSlot(slot);
 
   slotValues[slot.id] = value;
-  if (cardId) slotCardIds[slot.id] = cardId;
   slot.classList.add('filled');
   slot.querySelector('.slot-text').textContent = value;
 
@@ -1106,7 +1106,10 @@ function placeCard(slot, value, poolId, cardId) {
   const card = cardId
     ? document.querySelector(`.cond-card[data-card-id="${cardId}"]`)
     : document.querySelector(`.cond-card[data-pool="${poolId}"][data-value="${value}"]:not(.placed)`);
-  if (card) card.classList.add('placed');
+  if (card && !isReusableCard(card)) {
+    slotCardIds[slot.id] = card.dataset.cardId;
+    card.classList.add('placed');
+  }
 
   updateProgress();
 }
@@ -1178,7 +1181,10 @@ function updateDerivedAnswers() {
 function updateCardPoolCounts() {
   document.querySelectorAll('.card-pool').forEach(pool => {
     const required = Number(pool.dataset.required || 0);
-    const placed = pool.querySelectorAll('.cond-card.placed').length;
+    const poolKey = pool.id.replace('pool-', '');
+    const placed = Array.from(document.querySelectorAll(`.drop-slot[data-slot^="${poolKey}_"]`))
+      .filter(slot => !!slotValues[slot.id])
+      .length;
     const meta = pool.querySelector('.card-pool-meta');
     const complete = required > 0 && placed >= required;
 
@@ -1188,7 +1194,7 @@ function updateCardPoolCounts() {
 
   document.querySelectorAll('.cond-card').forEach(card => {
     card.setAttribute('aria-pressed', card.classList.contains('selected-card') ? 'true' : 'false');
-    card.setAttribute('aria-disabled', card.classList.contains('placed') ? 'true' : 'false');
+    card.setAttribute('aria-disabled', card.classList.contains('placed') && !isReusableCard(card) ? 'true' : 'false');
   });
 }
 
